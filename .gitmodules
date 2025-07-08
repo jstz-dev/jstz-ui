@@ -1,0 +1,3 @@
+[submodule "jstz-ui-components"]
+	path = jstz-ui-components
+	url = git@github.com-trili:bohdan-trilitech/jstz-ui-components.git
