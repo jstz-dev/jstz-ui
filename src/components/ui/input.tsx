@@ -1,7 +1,7 @@
 import type { LucideProps } from "lucide-react";
 import type { ComponentProps, ComponentPropsWithRef, ReactNode } from "react";
-import { cn } from "~/lib/utils";
 
+import { cn } from "../../lib/utils";
 import type { ButtonProps } from "./button";
 
 interface InputProps extends Omit<ComponentProps<"input">, "children"> {
@@ -42,9 +42,9 @@ export function Input({
         type={type}
         data-slot="input"
         className={cn(
-          "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input aria-invalid:outline-destructive/20 dark:aria-invalid:outline-destructive/40 aria-invalid:border-destructive focus-visible:outline-brand-blue-300 flex h-12 w-full min-w-0 rounded-2xl border bg-transparent p-(--input-y-padding) px-5 text-lg shadow-xs transition-[color,box-shadow] file:inline-flex file:h-9 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-base focus-visible:outline-[1.5px] focus-visible:outline-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base",
+          "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input aria-invalid:outline-destructive/20 dark:aria-invalid:outline-destructive/40 aria-invalid:border-destructive focus-visible:outline-brand-blue-300 p-(--input-y-padding) shadow-xs flex h-12 w-full min-w-0 rounded-2xl border bg-transparent px-5 text-lg transition-[color,box-shadow] file:inline-flex file:h-9 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-base focus-visible:outline-[1.5px] focus-visible:outline-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-base",
           icon && "pl-12",
-          button && "h-14 rounded-(--input-radius) pr-30",
+          button && "rounded-(--input-radius) pr-30 h-14",
           className,
         )}
         {...props}

@@ -3,8 +3,8 @@
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 
 import type { ComponentProps } from "react";
-import { cn } from "~/lib/utils";
 
+import { cn } from "../../lib/utils";
 import { buttonVariants } from "./button";
 
 function Tabs({ className, ...props }: ComponentProps<typeof TabsPrimitive.Root>) {
@@ -36,7 +36,7 @@ function TabsTrigger({ className, ...props }: ComponentProps<typeof TabsPrimitiv
       data-slot="tabs-trigger"
       className={cn(
         buttonVariants({ variant: "ghost" }),
-        "data-[state=active]:bg-black-600 flex-1 rounded-xl whitespace-nowrap text-white/70 data-[state=active]:text-white/90 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+        "data-[state=active]:bg-black-600 flex-1 whitespace-nowrap rounded-xl text-white/70 data-[state=active]:text-white/90 [&_svg]:pointer-events-none [&_svg]:shrink-0",
         className,
       )}
       {...props}
