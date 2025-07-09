@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -56,6 +57,26 @@
     "vitest": "^3.2.4"
   },
   "exports": {
-    "./src/components/ui": "./src/components/ui/**/*.tsx"
+    "./index.css": "./src/index.css",
+    "./utils": "./src/lib/utils.ts",
+    "./ui/alert": "./src/components/ui/alert.tsx",
+    "./ui/button": "./src/components/ui/button.tsx",
+    "./ui/card": "./src/components/ui/card.tsx",
+    "./ui/checkbox": "./src/components/ui/checkbox.tsx",
+    "./ui/code": "./src/components/ui/checkbox.tsx",
+    "./ui/dialog": "./src/components/ui/dialog.tsx",
+    "./ui/dropdown-menu": "./src/components/ui/dropdown-menu.tsx",
+    "./ui/input": "./src/components/ui/input.tsx",
+    "./ui/label": "./src/components/ui/label.tsx",
+    "./ui/provider-icons": "./src/components/ui/provider-icons.tsx",
+    "./ui/select": "./src/components/ui/select.tsx",
+    "./ui/separator": "./src/components/ui/separator.tsx",
+    "./ui/sheet": "./src/components/ui/sheet.tsx",
+    "./ui/skeleton": "./src/components/ui/skeleton.tsx",
+    "./ui/table": "./src/components/ui/table.tsx",
+    "./ui/tabs": "./src/components/ui/tabs.tsx",
+    "./ui/textarea": "./src/components/ui/textarea.tsx",
+    "./ui/tooltip": "./src/components/ui/tooltip.tsx",
+    "./ui/tree-view": "./src/components/ui/tree-view.tsx"
   }
 }
