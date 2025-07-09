@@ -1,16 +1,25 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Button } from '../button';
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../dialog';
+import { Button } from "../button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../dialog";
 
 /**
  * A window overlaid on either the primary window or another dialog window,
  * rendering the content underneath inert.
  */
 const meta = {
-  title: 'ui/Dialog',
+  title: "ui/Dialog",
   component: Dialog,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
   render: (args) => (
     <Dialog {...args}>
@@ -21,7 +30,8 @@ const meta = {
           <DialogTitle>Are you absolutely sure?</DialogTitle>
 
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+            This action cannot be undone. This will permanently delete your account and remove your
+            data from our servers.
           </DialogDescription>
         </DialogHeader>
 
@@ -38,7 +48,7 @@ const meta = {
     </Dialog>
   ),
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
 } satisfies Meta<typeof Dialog>;
 
