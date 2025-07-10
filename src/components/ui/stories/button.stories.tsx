@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { ArrowRight, Download, Loader2, type LucideProps, Mail, Share } from "lucide-react";
 import { cn } from "~/lib/utils";

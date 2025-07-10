@@ -12,7 +12,8 @@ import type {
   HTMLAttributes,
   PropsWithChildren,
 } from "react";
-import { cn } from "~/lib/utils";
+
+import { cn } from "../../lib/utils";
 
 interface TreeDataItem {
   id: string;
@@ -37,7 +38,6 @@ const TreeContext = createContext<{
 } | null>(null);
 
 function useTree() {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return useContext(TreeContext)!;
 }
 
@@ -218,7 +218,7 @@ function TreeNode({ item, renderNodeIcon, renderLeafIcon, handleDrop }: TreeNode
         <AccordionPrimitive.Header>
           <AccordionPrimitive.Trigger
             className={cn(
-              "group before:bg-accent/70 flex w-full flex-1 items-center px-2 py-2 transition-all before:absolute before:left-0 before:-z-10 before:h-[2rem] before:w-full before:rounded-lg before:opacity-0 hover:before:opacity-100",
+              "before:bg-accent/70 group flex w-full flex-1 items-center px-2 py-2 transition-all before:absolute before:left-0 before:-z-10 before:h-[2rem] before:w-full before:rounded-lg before:opacity-0 hover:before:opacity-100",
               selectedItemId === item.id &&
                 "before:bg-accent/70 text-accent-foreground before:opacity-100",
               isDragOver && "before:bg-primary/20 text-primary-foreground before:opacity-100",
@@ -311,7 +311,7 @@ function TreeLeaf({ ref, className, item, renderLeafIcon, handleDrop, ...props }
     <div
       ref={ref}
       className={cn(
-        "group before:bg-accent/70 ml-5 flex cursor-pointer items-center px-2 py-2 text-left before:absolute before:right-1 before:left-0 before:-z-10 before:h-[2rem] before:w-full before:rounded-lg before:opacity-0 hover:before:opacity-100",
+        "before:bg-accent/70 group ml-5 flex cursor-pointer items-center px-2 py-2 text-left before:absolute before:left-0 before:right-1 before:-z-10 before:h-[2rem] before:w-full before:rounded-lg before:opacity-0 hover:before:opacity-100",
         selectedItemId === item.id &&
           "before:bg-accent/70 text-accent-foreground before:opacity-100",
         isDragOver && "before:bg-primary/20 text-primary-foreground before:opacity-100",
@@ -352,7 +352,7 @@ function AccordionContent({
       )}
       {...props}
     >
-      <div className="pt-0 pb-1">{children}</div>
+      <div className="pb-1 pt-0">{children}</div>
     </AccordionPrimitive.Content>
   );
 }
