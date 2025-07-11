@@ -2,7 +2,13 @@
 
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 
-import { ChevronRight, File, FolderClosed, FolderOpen, type LucideProps } from "lucide-react";
+import {
+  ChevronRight,
+  File,
+  FolderClosed,
+  FolderOpen,
+  type LucideProps,
+} from "lucide-react";
 import { createContext, useContext, useState } from "react";
 import type {
   Ref,
@@ -14,12 +20,17 @@ import type {
 } from "react";
 
 import { cn } from "../../lib/utils";
+import { Button } from "./button";
+
+type Primitive = string | number | boolean | null | undefined | symbol | bigint;
+
 
 interface TreeDataItem {
   id: string;
   name: string | ReactNode;
   icon?: ReactNode;
   actions?: ReactNode;
+  rawData?: string;
   renderOpenIcon?: (props: LucideProps) => ReactNode;
   renderSelectedIcon?: (props: LucideProps) => ReactNode;
   children?: TreeDataItem[];
@@ -89,7 +100,10 @@ function TreeView({
 
     const ids: string[] = [];
 
-    function walkTreeItems(data: TreeDataItem[] | TreeDataItem, initialSelectedItemId: string) {
+    function walkTreeItems(
+      data: TreeDataItem[] | TreeDataItem,
+      initialSelectedItemId: string,
+    ) {
       if (Array.isArray(data)) {
         for (const item of data) {
           ids.push(item.id);
@@ -125,7 +139,10 @@ function TreeView({
         {children}
       </TreeContext>
 
-      <div className="h-12 w-full" onDrop={() => handleDrop({ id: "", name: "parent_div" })} />
+      <div
+        className="h-12 w-full"
+        onDrop={() => handleDrop({ id: "", name: "parent_div" })}
+      />
     </div>
   );
 }
@@ -136,10 +153,12 @@ interface TreeItemProps {
   ref?: Ref<HTMLUListElement>;
   data?: TreeDataItem | TreeDataItem[];
   handleDrop?: (item: TreeDataItem) => void;
+  showRaw?: boolean
 }
 
 function TreeItem({
   ref,
+  showRaw,
   renderNodeIcon = (props) => <FolderClosed {...props} />,
   renderLeafIcon = (props) => <File {...props} />,
   handleDrop,
@@ -152,36 +171,71 @@ function TreeItem({
     data = item;
   }
 
+  const arrayData = Array.isArray(data) ? data : [data];
+
   return (
     <ul ref={ref} role="tree" {...props}>
-      {(Array.isArray(data) ? data : [data]).map((item) => (
-        <li key={item.id}>
-          {item.children ? (
-            <TreeNode
-              item={item}
-              renderNodeIcon={renderNodeIcon}
-              renderLeafIcon={renderLeafIcon}
-              handleDrop={handleDrop}
-            />
-          ) : (
-            <TreeLeaf item={item} renderLeafIcon={renderLeafIcon} handleDrop={handleDrop} />
-          )}
-        </li>
-      ))}
+      {arrayData.map((item) => {
+        return (
+          <li key={item.id}>
+            {showRaw && (
+              <TreeLeaf
+                item={{
+                  id: item.id,
+                  name: item.rawData,
+                  onClick: () =>
+                    navigator.clipboard.writeText(item.rawData ?? ""),
+                }}
+                renderLeafIcon={renderLeafIcon}
+                handleDrop={handleDrop}
+              />
+            )}
+            {!showRaw &&
+              (item.children ? (
+                <TreeNode
+                  item={item}
+                  renderNodeIcon={renderNodeIcon}
+                  renderLeafIcon={renderLeafIcon}
+                  handleDrop={handleDrop}
+                />
+              ) : (
+                <TreeLeaf
+                  item={item}
+                  renderLeafIcon={renderLeafIcon}
+                  handleDrop={handleDrop}
+                />
+              ))}
+          </li>
+        );
+      })}
     </ul>
   );
 }
 
-interface TreeNodeProps extends Required<Pick<TreeItemProps, "renderLeafIcon" | "renderNodeIcon">> {
+interface TreeNodeProps
+  extends Required<Pick<TreeItemProps, "renderLeafIcon" | "renderNodeIcon">> {
   item: TreeDataItem;
   handleDrop?: (item: TreeDataItem) => void;
 }
 
-function TreeNode({ item, renderNodeIcon, renderLeafIcon, handleDrop }: TreeNodeProps) {
-  const { selectedItemId, handleSelectChange, handleDragStart, expandedItemIds, draggedItem } =
-    useTree();
-  const [value, setValue] = useState(expandedItemIds.includes(item.id) ? [item.id] : []);
+function TreeNode({
+  item,
+  renderNodeIcon,
+  renderLeafIcon,
+  handleDrop,
+}: TreeNodeProps) {
+  const {
+    selectedItemId,
+    handleSelectChange,
+    handleDragStart,
+    expandedItemIds,
+    draggedItem,
+  } = useTree();
+  const [value, setValue] = useState(
+    expandedItemIds.includes(item.id) ? [item.id] : [],
+  );
   const [isDragOver, setIsDragOver] = useState(false);
+  const [showRaw, setShowRaw] = useState(false);
 
   function onDragStart(e: DragEvent) {
     if (!item.draggable) {
@@ -213,7 +267,11 @@ function TreeNode({ item, renderNodeIcon, renderLeafIcon, handleDrop }: TreeNode
   const isOpen = value.includes(item.id);
 
   return (
-    <AccordionPrimitive.Root type="multiple" value={value} onValueChange={(s) => setValue(s)}>
+    <AccordionPrimitive.Root
+      type="multiple"
+      value={value}
+      onValueChange={(s) => setValue(s)}
+    >
       <AccordionPrimitive.Item value={item.id}>
         <AccordionPrimitive.Header>
           <AccordionPrimitive.Trigger
@@ -221,7 +279,8 @@ function TreeNode({ item, renderNodeIcon, renderLeafIcon, handleDrop }: TreeNode
               "before:bg-accent/70 group flex w-full flex-1 items-center px-2 py-2 transition-all before:absolute before:left-0 before:-z-10 before:h-[2rem] before:w-full before:rounded-lg before:opacity-0 hover:before:opacity-100",
               selectedItemId === item.id &&
                 "before:bg-accent/70 text-accent-foreground before:opacity-100",
-              isDragOver && "before:bg-primary/20 text-primary-foreground before:opacity-100",
+              isDragOver &&
+                "before:bg-primary/20 text-primary-foreground before:opacity-100",
             )}
             onClick={() => {
               handleSelectChange(item);
@@ -247,14 +306,32 @@ function TreeNode({ item, renderNodeIcon, renderLeafIcon, handleDrop }: TreeNode
               default={renderNodeIcon}
             />
 
-            <span className="truncate text-sm">{item.name}</span>
+            <div className="flex gap-2 items-center">
+              <span className="truncate text-sm">{item.name}</span>
+              {item.children?.some((item) => !!item.rawData) && (
+                <Button
+                  size="link"
+                  variant="link"
+                  className={cn("text-orange-400 text-sm", showRaw && "text-blue-400")}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setShowRaw(!showRaw);
+                  }}
+                >
+                  {showRaw ? "Show parsed" : "Show raw"}
+                </Button>
+              )}
+            </div>
 
-            <TreeActions isSelected={selectedItemId === item.id}>{item.actions}</TreeActions>
+            <TreeActions isSelected={selectedItemId === item.id}>
+              {item.actions}
+            </TreeActions>
           </AccordionPrimitive.Trigger>
         </AccordionPrimitive.Header>
 
         <AccordionContent className="ml-4 border-l pl-1">
           <TreeItem
+            showRaw={showRaw}
             data={item.children ? item.children : item}
             handleDrop={handleDrop}
             renderLeafIcon={renderLeafIcon}
@@ -276,8 +353,16 @@ interface TreeLeafProps
   ref?: Ref<HTMLDivElement>;
 }
 
-function TreeLeaf({ ref, className, item, renderLeafIcon, handleDrop, ...props }: TreeLeafProps) {
-  const { selectedItemId, handleSelectChange, handleDragStart, draggedItem } = useTree();
+function TreeLeaf({
+  ref,
+  className,
+  item,
+  renderLeafIcon,
+  handleDrop,
+  ...props
+}: TreeLeafProps) {
+  const { selectedItemId, handleSelectChange, handleDragStart, draggedItem } =
+    useTree();
   const [isDragOver, setIsDragOver] = useState(false);
 
   function onDragStart(e: DragEvent) {
@@ -314,7 +399,8 @@ function TreeLeaf({ ref, className, item, renderLeafIcon, handleDrop, ...props }
         "before:bg-accent/70 group ml-5 flex cursor-pointer items-center px-2 py-2 text-left before:absolute before:left-0 before:right-1 before:-z-10 before:h-[2rem] before:w-full before:rounded-lg before:opacity-0 hover:before:opacity-100",
         selectedItemId === item.id &&
           "before:bg-accent/70 text-accent-foreground before:opacity-100",
-        isDragOver && "before:bg-primary/20 text-primary-foreground before:opacity-100",
+        isDragOver &&
+          "before:bg-primary/20 text-primary-foreground before:opacity-100",
         className,
       )}
       onClick={() => {
@@ -328,11 +414,17 @@ function TreeLeaf({ ref, className, item, renderLeafIcon, handleDrop, ...props }
       onDrop={onDrop}
       {...props}
     >
-      <TreeIcon item={item} isSelected={selectedItemId === item.id} default={renderLeafIcon} />
+      <TreeIcon
+        item={item}
+        isSelected={selectedItemId === item.id}
+        default={renderLeafIcon}
+      />
 
       <span className="flex-grow text-sm">{item.name}</span>
 
-      <TreeActions isSelected={selectedItemId === item.id}>{item.actions}</TreeActions>
+      <TreeActions isSelected={selectedItemId === item.id}>
+        {item.actions}
+      </TreeActions>
     </div>
   );
 }
@@ -390,10 +482,118 @@ interface TreeActionsProps extends PropsWithChildren {
 
 function TreeActions({ children, isSelected }: TreeActionsProps) {
   return (
-    <div className={cn("absolute right-3 group-hover:block", isSelected ? "block" : "hidden")}>
+    <div
+      className={cn(
+        "absolute right-3 group-hover:block",
+        isSelected ? "block" : "hidden",
+      )}
+    >
       {children}
     </div>
   );
 }
 
-export { TreeView, TreeItem, type TreeDataItem };
+
+function mapToTreeData(
+  record: Record<string, Primitive | Record<string, Primitive>>,
+): TreeDataItem[] {
+  const treeData = Object.entries(record).map(([k, v]): TreeDataItem => {
+    if (typeof v === "object" && v !== null && !Array.isArray(v)) {
+      return {
+        id: k,
+        name: k,
+        children: mapToTreeData(v),
+        rawData: addRawData(k,v)
+      };
+    }
+
+    if (Array.isArray(v)) {
+      const isPrimitiveArray = v.every(isPrimitive);
+
+      if (isPrimitiveArray) {
+        return {
+          id: k,
+          rawData: addRawData(k,v),
+          name: (
+            <div>
+              {k}: [
+              {v.map((item, i) => (
+                <span key={i}>
+                  <PrimitiveValue>{item as Primitive}</PrimitiveValue>
+                  {i < v.length - 1 ? ", " : ""}
+                </span>
+              ))}
+              ]
+            </div>
+          ),
+        };
+      }
+
+      return {
+        id: k,
+        name: k,
+        children: mapToTreeData(v),
+        rawData: addRawData(k,v)
+      };
+    }
+
+    return {
+      id: k,
+      name: (
+        <div>
+          {k}: <PrimitiveValue>{v}</PrimitiveValue>
+        </div>
+      ),
+      rawData: addRawData(k,v)
+    };
+  });
+
+  return treeData;
+}
+
+function addRawData(key: string, value: unknown) {
+  try {
+    const rawData = JSON.stringify({[key]: value}, null, 2)
+    return rawData
+  } catch (e) {
+    return undefined
+  }
+}
+
+function isPrimitive(value: unknown): value is Primitive {
+  return value === null || (typeof value !== "object" && typeof value !== "function");
+}
+
+function PrimitiveValue({ children }: { children: Primitive }) {
+  switch (true) {
+    case typeof children === "string":
+      return (
+        <>
+          &apos;
+          <span className="text-blue-400">{children}</span>
+          &apos;
+        </>
+      );
+
+    case typeof children === "number":
+      return <span className="text-orange-400">{children}</span>;
+
+    case typeof children === "boolean":
+      return <span className="text-purple-400">{children.toString()}</span>;
+
+    case children === null:
+      return <span className="text-gray-400">null</span>;
+
+    default:
+      return (
+        <>
+          &apos;
+          <span className="text-gray-500" />
+          &apos;
+        </>
+      );
+  }
+}
+
+
+export { TreeView, TreeItem, mapToTreeData, type TreeDataItem, type Primitive };
