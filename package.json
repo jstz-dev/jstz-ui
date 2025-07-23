@@ -27,6 +27,7 @@
     "lucide-react": "^0.525.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-resizable-panels": "^3.0.3",
     "react-syntax-highlighter": "^15.6.1",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.11"
@@ -70,6 +71,7 @@
     "./ui/input": "./src/components/ui/input.tsx",
     "./ui/label": "./src/components/ui/label.tsx",
     "./ui/provider-icons": "./src/components/ui/provider-icons.tsx",
+    "./ui/resizable": "./src/components/ui/resizable.tsx",
     "./ui/select": "./src/components/ui/select.tsx",
     "./ui/separator": "./src/components/ui/separator.tsx",
     "./ui/sheet": "./src/components/ui/sheet.tsx",
