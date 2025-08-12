@@ -555,7 +555,8 @@ function addRawData(key: string, value: unknown) {
   try {
     const rawData = JSON.stringify({[key]: value}, null, 2)
     return rawData
-  } catch (e) {
+  } catch (err) {
+    console.log(err)
     return undefined
   }
 }
