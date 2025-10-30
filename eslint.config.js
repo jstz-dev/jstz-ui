@@ -14,22 +14,26 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig(
   [
-    globalIgnores(["dist"]),
+    globalIgnores(["dist", ".storybook"]),
     {
-      files: ["**/*.{ts,tsx}"],
+      files: ["src/**/*.{ts,tsx}"],
       extends: [
         js.configs.recommended,
         ...tseslint.configs.strictTypeChecked,
         reactHooks.configs["recommended-latest"],
       ],
       languageOptions: {
-        ecmaVersion: 2020,
+        ecmaVersion: 2024,
         globals: globals.browser,
         parserOptions: {
+          projectService: true,
           tsconfigRootDir: __dirname,
+          ecmaFeatures: {
+            jsx: true,
+          },
         },
       },
     },
   ],
-  storybook.configs["flat/recommended"],
+  storybook.configs["flat/recommended"]
 );
