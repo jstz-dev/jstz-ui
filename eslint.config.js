@@ -19,8 +19,8 @@ export default defineConfig(
       files: ["src/**/*.{ts,tsx}"],
       extends: [
         js.configs.recommended,
-        ...tseslint.configs.strictTypeChecked,
-        reactHooks.configs["recommended-latest"],
+        tseslint.configs.strictTypeChecked,
+        reactHooks.configs.flat["recommended-latest"],
       ],
       languageOptions: {
         ecmaVersion: 2024,
