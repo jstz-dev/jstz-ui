@@ -88,6 +88,7 @@
     "./ui/tooltip": "./src/components/ui/tooltip.tsx",
     "./ui/tree-view": "./src/components/ui/tree-view.tsx",
     "./ui/badge": "./src/components/ui/badge.tsx",
-    "./ui/slider": "./src/components/ui/slider.tsx"
+    "./ui/slider": "./src/components/ui/slider.tsx",
+    "./ui/spinner": "./src/components/ui/spinner.tsx"
   }
 }
